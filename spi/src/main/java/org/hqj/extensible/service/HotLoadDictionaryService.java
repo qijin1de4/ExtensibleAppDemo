@@ -29,20 +29,21 @@ public class HotLoadDictionaryService {
         return service;
     }
 
-    public String getDefinition(String word){
-
+    public String getDefinition(String word, String dictName){
         String definition = null;
         try{
-            serviceLoader.reload();
+            //serviceLoader.reload();
             Iterator<Dictionary> dictionaries = serviceLoader.iterator();
             while(definition == null  && dictionaries.hasNext()){
-                definition = dictionaries.next().getDefinition(word);
+                Dictionary dictionary = dictionaries.next();
+                if(dictName.equals(dictionary.getName())){
+                    definition = dictionary.getDefinition(word);
+                }
             }
         } catch(ServiceConfigurationError e){
             definition = null;
             e.printStackTrace();
         }
-
         return definition;
     }
 

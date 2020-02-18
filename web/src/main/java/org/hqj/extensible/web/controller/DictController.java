@@ -14,7 +14,7 @@ public class DictController {
     private HotLoadDictionaryService hotLoadDictionaryService = HotLoadDictionaryService.getInstance();
 
     @RequestMapping("/definition")
-    String definition(@RequestParam(name="word") String word){
+    public String definition(@RequestParam(name="word") String word){
         String result =  word + " : ";
         String definition = dictionaryService.getDefinition(word);
         if(definition == null){
@@ -26,11 +26,11 @@ public class DictController {
     }
 
     @RequestMapping("/hot")
-    String hot(@RequestParam(name="word") String word){
+    public String hot(@RequestParam(name="word") String word, @RequestParam(name="dictName") String dictName){
         String result =  word + " : ";
-        String definition = hotLoadDictionaryService.getDefinition(word);
+        String definition = hotLoadDictionaryService.getDefinition(word, dictName);
         if(definition == null){
-            result += " found no definition.";
+            result += " 未找到该词语的解释！";
         }else{
             result += definition;
         }
@@ -38,13 +38,13 @@ public class DictController {
     }
 
     @RequestMapping("/reload")
-    String reload(){
+    public String reload(){
         try{
             this.hotLoadDictionaryService.reload();
-            return "Successfully reloaded !";
+            return "重新加载成功!";
         }catch(Exception e){
             e.printStackTrace();
-            return "Failed to reaload !";
+            return "重新加载失败!";
         }
     }
 }

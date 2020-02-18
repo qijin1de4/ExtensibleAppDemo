@@ -22,4 +22,9 @@ public class ENGDictionary implements Dictionary {
     public String getDefinition(String word) {
         return this.dict.get(word);
     }
+
+    @Override
+    public String getName() {
+        return "英英字典";
+    }
 }
