@@ -15,6 +15,7 @@ public class ENGDictionary implements Dictionary {
 
         dict.put("car", "an automobile.");
         dict.put("editor", "a person who edits.");
+        dict.put("java", "a programming language.");
     }
 
     @Override

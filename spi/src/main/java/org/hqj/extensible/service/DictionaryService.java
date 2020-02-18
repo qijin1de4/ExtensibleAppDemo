@@ -28,6 +28,8 @@ public class DictionaryService {
         String definition = null;
 
         try{
+            serviceLoader.reload();
+
             Iterator<Dictionary> dictionaries = serviceLoader.iterator();
             while(definition == null  && dictionaries.hasNext()){
                 definition = dictionaries.next().getDefinition(word);
@@ -36,6 +38,7 @@ public class DictionaryService {
             definition = null;
             e.printStackTrace();
         }
+
         return definition;
     }
 }
