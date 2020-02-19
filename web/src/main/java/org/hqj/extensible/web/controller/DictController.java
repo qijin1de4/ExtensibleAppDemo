@@ -3,10 +3,13 @@ package org.hqj.extensible.web.controller;
 import org.hqj.extensible.service.DictionaryService;
 import org.hqj.extensible.service.HotLoadDictionaryService;
 import org.hqj.extensible.web.Result;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.regex.Pattern;
 
 @RestController
 public class DictController {
@@ -32,6 +35,19 @@ public class DictController {
     public Result hot(@RequestParam(name="word") String word, @RequestParam(name="dictName") String dictName){
         Result result = new Result();
         result.setTimeStamp(System.currentTimeMillis());
+
+        if(StringUtils.isEmpty(word) || !word.matches("[a-zA-Z]+")){
+            result.setErrorCode(2);
+            result.setMessage("非法参数. 目标词语为空或者为非英语词汇。");
+            return result;
+        }
+
+        if(StringUtils.isEmpty(dictName)){
+            result.setErrorCode(3);
+            result.setMessage("非法参数. 未指定字典！");
+            return result;
+        }
+
         result.setMessage("查询成功！");
         String prefix =  word + " : ";
         try{
