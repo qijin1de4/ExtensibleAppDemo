@@ -16,6 +16,7 @@
         <module>chnDict</module>
         <module>engDict</module>
         <module>web</module>
+        <module>util</module>
     </modules>
 
     <properties>
@@ -28,8 +29,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>

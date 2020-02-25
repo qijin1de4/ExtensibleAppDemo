@@ -1,6 +1,6 @@
 package org.hqj.extensible.service;
 
-import org.hqj.extensible.spi.dictionary.ShangXiang;
+import org.hqj.extensible.spi.dictionary.Dictionary;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,45 +12,47 @@ import java.nio.file.spi.FileSystemProvider;
 import java.text.MessageFormat;
 import java.util.*;
 
-public class ShangXiangService {
+public class SPIHotLoadDictionaryService {
 
-    private static ShangXiangService service;
+    private static SPIHotLoadDictionaryService service;
 
-    private ServiceLoader<ShangXiang> serviceLoader;
+    private ServiceLoader<Dictionary> serviceLoader;
 
-    private ShangXiangService(){
-        this.serviceLoader = ServiceLoader.load(ShangXiang.class);
+    private SPIHotLoadDictionaryService(){
+        this.serviceLoader = ServiceLoader.load(Dictionary.class);
     }
 
-    public synchronized static ShangXiangService getInstance(){
+    public synchronized static SPIHotLoadDictionaryService getInstance(){
         if(service == null){
-            service = new ShangXiangService();
+            service = new SPIHotLoadDictionaryService();
         }
         return service;
     }
 
-    public String getData(String token){
-        String data = null;
-        try{
-            //serviceLoader.reload();
-            Iterator<ShangXiang> iterator = serviceLoader.iterator();
-            while(iterator.hasNext()){
-                ShangXiang shangXiang = iterator.next();
-                if(token.equals(shangXiang.getName())){
-                    data = shangXiang.getData(token);
+    public String getDefinition(String word, String dictName){
+        String definition = null;
+        if(word != null && !"".equals(word)){
+             try{
+                //serviceLoader.reload();
+                Iterator<Dictionary> dictionaries = serviceLoader.iterator();
+                while(definition == null  && dictionaries.hasNext()){
+                    Dictionary dictionary = dictionaries.next();
+                    if(dictName.equals(dictionary.getName())){
+                        definition = dictionary.getDefinition(word);
+                    }
                 }
+            } catch(ServiceConfigurationError e){
+                definition = null;
+                e.printStackTrace();
             }
-        } catch(ServiceConfigurationError e){
-            data = null;
-            e.printStackTrace();
         }
-        return data;
+        return definition;
     }
 
     public void reload() throws IOException, ClassNotFoundException {
         Path jarDir = Paths.get(new File("/Users/huqijin/tmp/").toURI());
         URLClassLoader urlClzLoader;
-        List<URL> jarURLs = new ArrayList<>();
+        List<URL>  jarURLs = new ArrayList<>();
         FileSystemProvider fileSystemProvider = getZipFileSystemProvider();
         List<String> implsToLoad = new ArrayList<>();
 
@@ -78,9 +80,9 @@ public class ShangXiangService {
 
             //load(implsToLoad, urlClzLoader);
 
-            serviceLoader = ServiceLoader.load(ShangXiang.class, urlClzLoader);
+            serviceLoader = ServiceLoader.load(Dictionary.class, urlClzLoader);
 
-            Iterator<ShangXiang> iterator = serviceLoader.iterator();
+            Iterator<Dictionary> iterator = serviceLoader.iterator();
             while(iterator.hasNext()){
                 info("加载服务实现类："+iterator.next().getClass().getName());
             }

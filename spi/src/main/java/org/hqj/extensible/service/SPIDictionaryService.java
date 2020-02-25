@@ -6,19 +6,19 @@ import java.util.Iterator;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
-public class DictionaryService {
+public class SPIDictionaryService {
 
-    private static DictionaryService service;
+    private static SPIDictionaryService service;
 
     private ServiceLoader<Dictionary> serviceLoader;
 
-    private DictionaryService(){
+    private SPIDictionaryService(){
         this.serviceLoader = ServiceLoader.load(Dictionary.class);
     }
 
-    public synchronized static DictionaryService getInstance(){
+    public synchronized static SPIDictionaryService getInstance(){
         if(service == null){
-            service = new DictionaryService();
+            service = new SPIDictionaryService();
         }
         return service;
     }
